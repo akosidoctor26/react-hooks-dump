@@ -13,6 +13,8 @@ const useMediaRecorder = ({
   onStart = () => {},
   onResume = () => {},
   onPause = () => {},
+  onStop: onCustomStop = () => {},
+  onError: onCustomError = () => {},
 }) => {
   // Refs
   const mediaStream = useRef();
@@ -20,19 +22,22 @@ const useMediaRecorder = ({
   const mediaChunks = useRef([]);
 
   // States
-  const [mediaBlobUrl, setMediaBlobUrl] = useState();
+  const [mediaBlob, setMediaBlob] = useState();
   const [status, setStatus] = useState(RECORDING_STATES.INACTIVE);
 
   //#region Event Handlers
-  const onStop = () => {
+  const onStop = (event) => {
     const mediaBlob = new Blob(mediaChunks.current, mediaRecorderOptions);
-    const url = URL.createObjectURL(mediaBlob);
-    setMediaBlobUrl(url);
+    setMediaBlob(mediaBlob);
     console.log(`Recording Status: ${status}`);
+
+    onCustomStop(event, { mediaBlob });
   };
 
-  const onError = (ev) => {
-    console.log(ev.error.name);
+  const onError = (event) => {
+    console.log(event.error.name);
+
+    onCustomError(event);
   };
 
   const onDataAvailable = (ev) => {
@@ -102,7 +107,7 @@ const useMediaRecorder = ({
     stopRecording,
     resumeRecording,
     pauseRecording,
-    mediaBlobUrl,
+    mediaBlob,
     status,
   };
 };
