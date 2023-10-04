@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-const RECORDING_STATES = {
+export const RECORDING_STATES = {
   INACTIVE: 'inactive',
   RECORDING: 'recording',
   PAUSED: 'paused',
@@ -15,7 +15,7 @@ const useMediaRecorder = ({
   onPause = () => {},
   onStop: onCustomStop = () => {},
   onError: onCustomError = () => {},
-}) => {
+} = {}) => {
   // Refs
   const mediaStream = useRef();
   const mediaRecorder = useRef();
